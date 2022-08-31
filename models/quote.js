@@ -7,7 +7,12 @@ module.exports = class Quote {
     this.content = content;
   }
 
-  save() {}
+  save() {
+    return db.execute("INSERT INTO quotes (author , content) VALUES (? , ?) ", [
+      this.author,
+      this.content,
+    ]);
+  }
 
   static deleteById(id) {}
 

@@ -22,25 +22,20 @@ const getSingleQuote = (req, res, next) => {
   res.json({ singleQuote });
 };
 
-const getAllQuotes = async (req, res, next) => {
-  Quote.fetchAll()
-    .then(([rows, dataFiles]) => {
-      console.log(rows);
-      res.json({ quotes: rows });
-    })
-    .catch((err) => {});
-  let quotes;
+const addQuote = async (req, res, next) => {
+  const author = req.body.author;
+  const content = req.body.content;
+  const newQuote = new Quote(null, author, content);
 
   try {
-    quotes = await User.findById(userId);
+    await newQuote.save();
   } catch (err) {
-    return next(new HttpError("can't fetch user", 500));
+    return next(new HttpError(err, 404));
   }
-  if (!user) {
-    return next(new HttpError("can't found user cart", 404));
-  }
-  res.status(200).json(user.cart);
+
+  res.json({ quote: newQuote });
 };
 
 module.exports.getQuotes = getQuotes;
 module.exports.getSingleQuote = getSingleQuote;
+module.exports.addQuote = addQuote;
