@@ -1,12 +1,25 @@
-const db = require("../util/database");
+const Sequelize = require("sequelize");
+const sequelize = require("../util/database");
 
-module.exports = class Quote {
-  constructor(id, author, content) {
-    this.id = id;
-    this.author = author;
-    this.content = content;
-  }
+const Quote = sequelize.define("quote", {
+  id: {
+    type: Sequelize.INTEGER,
+    autoIncrement: true,
+    allowNull: false,
+    primaryKey: true,
+  },
+  author: {
+    type: Sequelize.STRING,
+    allowNull: false,
+  },
+  content: {
+    type: Sequelize.STRING,
+    allowNull: false,
+  },
+});
 
+module.exports = Quote;
+/*
   save() {
     return db.execute("INSERT INTO quotes (author , content) VALUES (? , ?) ", [
       this.author,
@@ -22,3 +35,4 @@ module.exports = class Quote {
 
   static findById(id) {}
 };
+*/

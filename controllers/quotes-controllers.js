@@ -1,41 +1,59 @@
+const { json } = require("body-parser");
 const HttpError = require("../models/http-error");
 const Quote = require("../models/quote");
 
-const getQuotes = async (req, res, next) => {
-  let quotes;
-  try {
-    quotes = await Quote.fetchAll();
-  } catch (err) {
-    return next(new HttpError(err.sqlMessage, 404));
-  }
-
-  res.json({ quotes: quotes[0] });
+const getQuotes = (req, res, next) => {
+  Quote.findAll()
+    .then((quotes) => {
+      console.log(quotes);
+      res.json({ quotes });
+    })
+    .catch((err) => {
+      console.log(err);
+    });
 };
 
 const getSingleQuote = (req, res, next) => {
   const quoteId = req.params.quoteId;
-  const singleQuote = DUMMY_QUOTES.find((quote) => quoteId === quote.id);
-
-  if (singleQuote === undefined) {
-    return next(new HttpError("Can't found quote id...", 404));
-  }
-  res.json({ singleQuote });
+  Quote.findByPy().then((quote) => {
+    res.json({ ss }).catch((err) => {
+      console.log("err");
+    });
+  });
 };
 
 const addQuote = async (req, res, next) => {
   const author = req.body.author;
   const content = req.body.content;
-  const newQuote = new Quote(null, author, content);
 
-  try {
-    await newQuote.save();
-  } catch (err) {
-    return next(new HttpError(err, 404));
-  }
+  Quote.create({
+    author: author,
+    content: content,
+  })
+    .then((result) => {
+      console.log(result);
+    })
+    .catch((err) => {
+      console.log(err);
+    });
+};
 
-  res.json({ quote: newQuote });
+const deleteQuote = (req, res, next) => {
+  const quoteId = req.params.quoteId;
+
+  Quote.findByPk(quoteId)
+    .then((quote) => {
+      quote.destroy();
+    })
+    .then((result) => {
+      res.json({ msg: "DELETED!" });
+    })
+    .catch((err) => {
+      console.log(err);
+    });
 };
 
 module.exports.getQuotes = getQuotes;
 module.exports.getSingleQuote = getSingleQuote;
 module.exports.addQuote = addQuote;
+module.exports.deleteQuote = deleteQuote;
