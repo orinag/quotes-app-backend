@@ -2,7 +2,10 @@ const express = require("express");
 const bodyParser = require("body-parser");
 
 const quotesRoutes = require("./routes/quotes-routes");
+const commentsRoutes = require("./routes/comments-routes");
 const sequelize = require("./util/database");
+const Quote = require("./models/quote");
+const Comment = require("./models/comment");
 
 const app = express();
 app.use(bodyParser.json());
@@ -20,6 +23,7 @@ app.use((req, res, next) => {
 app.use(bodyParser.json());
 
 app.use(quotesRoutes);
+app.use(commentsRoutes);
 
 app.use((error, req, res, next) => {
   if (res.headerSent) {
@@ -28,6 +32,9 @@ app.use((error, req, res, next) => {
   res.status(error.code || 500);
   res.json({ message: error.message || "Error" });
 });
+
+Comment.belongsTo(Quote, { constraints: true, onDelete: "CASCADE" });
+Quote.hasMany(Comment);
 
 sequelize
   .sync()

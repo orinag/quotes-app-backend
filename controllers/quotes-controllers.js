@@ -1,4 +1,3 @@
-const { json } = require("body-parser");
 const HttpError = require("../models/http-error");
 const Quote = require("../models/quote");
 
