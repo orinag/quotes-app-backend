@@ -12,8 +12,6 @@ echo -e "\nValidating Javascript:\n"
 
 # Check for eslint
 eslint="$BASEDIR/node_modules/.bin/eslint"
-echo "$eslint"
-echo $(which "$eslint" )
 which "$eslint" &>/dev/null
 if [[ "$?" == 1 ]]; then
   echo -e "\e[31mPlease install ESlint\e[0m"
