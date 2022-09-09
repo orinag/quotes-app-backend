@@ -22,7 +22,7 @@ for FILE in $STAGED_FILES; do
   "$eslint" "$FILE"
 
   if [[ "$?" == 0 ]]; then
-    echo -e "\e[31m[32mESLint Passed: $FILE\e[0m"
+    echo -e "\e[31mESLint Passed: $FILE\e[0m"
   else
     echo -e "\e[31mESLint Failed: $FILE\e[0m"
     PASS=false
