@@ -2,10 +2,28 @@ const express = require("express");
 const bodyParser = require("body-parser");
 
 const quotesRoutes = require("./routes/quotes-routes");
+const commentsRoutes = require("./routes/comments-routes");
+const sequelize = require("./util/database");
+const Quote = require("./models/quote");
+const Comment = require("./models/comment");
 
 const app = express();
+app.use(bodyParser.json());
+
+app.use((req, res, next) => {
+  res.setHeader("Access-Control-Allow-Origin", "*");
+  res.setHeader(
+    "Access-Control-Allow-Headers",
+    "Origin, X-Requested-With, Content-Type, Accept, Authorization"
+  );
+  res.setHeader("Access-Control-Allow-Methods", "GET, POST, PATCH, DELETE");
+
+  next();
+});
+app.use(bodyParser.json());
 
 app.use(quotesRoutes);
+app.use(commentsRoutes);
 
 app.use((error, req, res, next) => {
   if (res.headerSent) {
@@ -15,4 +33,14 @@ app.use((error, req, res, next) => {
   res.json({ message: error.message || "Error" });
 });
 
-app.listen(5000);
+Comment.belongsTo(Quote, { constraints: true, onDelete: "CASCADE" });
+Quote.hasMany(Comment);
+
+sequelize
+  .sync()
+  .then((result) => {
+    app.listen(5000);
+  })
+  .catch((err) => {
+    console.log(err);
+  });
