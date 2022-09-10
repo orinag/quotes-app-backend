@@ -1,5 +1,5 @@
-const HttpError = require("../models/http-error");
-const Comment = require("../models/comment");
+const HttpError = require('../models/http-error');
+const Comment = require('../models/comment');
 
 const getCommentsByQuoteId = (req, res, next) => {
   const qid = req.params.quoteId;
@@ -16,9 +16,9 @@ const getCommentsByQuoteId = (req, res, next) => {
 
 const addComment = (req, res, next) => {
   const qid = req.params.quoteId;
-  const name = req.body.name;
-  const content = req.body.content;
-  Comment.create({ name: name, content: content, quoteId: qid })
+  const { name } = req.body;
+  const { content } = req.body;
+  Comment.create({ name, content, quoteId: qid })
     .then((result) => {
       console.log(result);
       res.json(result);
